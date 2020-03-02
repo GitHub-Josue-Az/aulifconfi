@@ -1,0 +1,28 @@
+/* PARA QUE NO SALGA LA VOLITA*/
+.onee input[type="radio"] {
+    display: none;
+}
+
+/* CREA ESA IMAGEN ANTES DEL SPAN CON LOS ATRIBUTOS QUE CONTIENE */
+.onee input[type="radio"] + span:before {
+    content: "✔" ;
+    position: absolute;
+    padding: 1%;
+    width: 40px;
+    height: 40px;
+    margin-top: -3%;
+    border-radius: 100%;
+    background-color: #3498db;
+    color: #fff;
+    display: none;
+}
+
+
+
+/* CUANDO HAGO CLICK EN EL RADIO*/
+.onee input[type="radio"]:checked + span:before {  
+    margin-left: 77%;
+    display: block;
+      }
+
+
