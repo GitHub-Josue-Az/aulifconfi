@@ -20,7 +20,7 @@
   <style>
     html, body {
       position: relative;
-      height: 80%;
+      height: 95%;
     }
   
     .swiper-container {
@@ -54,11 +54,11 @@
 
     e.preventDefault();
       
-        var lesson = '<?php  echo  ($ids);?>';
+        var lesson = '<?php  echo  ($id);?>';
       
 
          $.ajax({
-          url:'iframee/'+ lesson,
+          url:'list/'+ lesson,
           success: function (data) {
                      $('#contenido').append(data); 
           }

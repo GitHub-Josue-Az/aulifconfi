@@ -62,9 +62,93 @@
     
 </div>
 
+    
+
+    <div id="contene" style=" width: 100%; height: 60%; margin-bottom: 5%">
+
+ <iframe style="; border-style: none; width: 100%; height: 100%" src="http://lms.confiteca.com/student/modulos/iframee/{{$lesson->id}}" ></iframe> 
+
+    </div>
+
 <div style="text-align: right;">
     <a style="font-size: 150%; padding-right: 3%" href="{{ route('student.examenes.show', [$lesson->id]) }}" class="btn btn-info"><i  style="padding-right: 15%;" class="fas fa-bars"></i> Examen</a>
 </div>
  
+<script type="text/javascript">
+   
+        var el = document.getElementById('contene'); //se define la variable "el" igual a nuestro div
+        el.style.display  = 'none';
+
+    window.onload = function(e)
+    {
+
+          
+        /*$.ajax({
+
+            url: "s3.php",
+            success : function(data)
+            {
+                 $('#contenido').append(data); 
+            }
+        });*/
+    var lesson = '<?php  echo  ($ids);?>';
+      
+
+         $.ajax({
+          url:'iframee/list/'+ lesson,
+          success: function (data) {
+            if (data == "No hay contenido") {
+            }
+            else{
+                 el.style.display  = 'block';
+            }
+          }
+       });
+
+    };
+
+
+
+    $('#uploadFile').submit(function(e)
+    {
+        e.preventDefault();
+
+
+        var Form = new FormData($('#uploadFile')[0]);
+
+
+        $.ajax({
+            url : "carga",
+            type: "post",
+            data: Form,
+            processData: false,
+            contentType: false,
+            success : function(data)
+            {
+                location.reload();
+                alert("Carga Realizada");
+            }
+        });
+
+    }); 
+
+
+    /*function getFile(key)
+    {
+        $.ajax({
+
+            url: "s3.php",
+            data: {key: key},
+            type: "post",
+            success: function(data)
+            {
+                alert('Descarga Correcta!'); 
+            }
+        });
+    }*/
+
+
+</script>
+
 
 @endsection

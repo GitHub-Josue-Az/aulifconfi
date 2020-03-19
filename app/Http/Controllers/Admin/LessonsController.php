@@ -12,6 +12,11 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Aws\Exception\AwsException;
+use Aws\S3\S3Client;
+use Aws\Signature\createPresignedRequest; 
+
+require_once '../vendor/autoload.php';
 
 class LessonsController extends Controller{
     
@@ -59,9 +64,9 @@ class LessonsController extends Controller{
              'file' => 'required|max:1024|mimes:jpg,jpeg,png,gif', 
              ]);
         
-            if ($validator->errors()->count() > 2){
+            /*if ($validator->errors()->count() > 2){
                 return redirect()->route('admin.lessons.create')->withErrors('Debe seleccionar al menos 1 campo desplegable');
-            }else{
+            }else{*/
 
               if($request->hasFile('file') && $request->file('file')->isValid()) {
     /* store es referente al storage dende la carpeta es lessons // Devuelve una instancia de la ruta donde esta*/
@@ -71,7 +76,7 @@ class LessonsController extends Controller{
              $lesson = Lesson::create($request->all());
             return redirect()->route('admin.lessons.index')->with('success', 'Registro guardado satisfactoriamente');
 
-         }
+         /*}*/
 
       }
 
@@ -110,12 +115,150 @@ class LessonsController extends Controller{
     }
 
 
+public function listado($id){
+
+
+        $S3Options = [
+        'scheme' => 'http',
+        'version' => 'latest',
+        'region'  => 'us-west-2',
+        'credentials' => 
+        [
+          'key' => 'AKIAJ64CUZMI2B36T3BA',
+          'secret' => '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'
+        ]
+      ]; 
+
+      $s3 = new S3Client($S3Options); 
+      
+       // listar archivos
+      $archivos = $s3->listObjects(
+        [
+          'Bucket' => 'lmsconfitecabucket',
+          "Prefix" => $id
+        ]); 
+
+        $archivos = $archivos->toArray();
+         $fila = ""; 
+
+           if (array_has($archivos,'Contents')) {
+
+            foreach ($archivos['Contents'] as $archivo) 
+        {
+
+        //Get a command to GetObject
+        $cmd = $s3->getCommand('GetObject', [
+            'Bucket' => 'lmsconfitecabucket',
+            'Key'    => $archivo['Key']
+        ]);
+
+        //The period of availability
+        $request = $s3->createPresignedRequest($cmd, '+10 minutes');
+
+        //Get the pre-signed URL
+        $signedUrl = (string) $request->getUri();
+
+          $fila .= "<div class='swiper-slide'><img  class='swiper-slide' src={$signedUrl}></div>"; 
+          //$fila .= "<td><button onclick='getFile(&#34;{$archivo['Key']}&#34;)'>Descarga</button></td></tr>"; 
+       
+         }
+          return $fila ;
+
+           }
+
+         return "No hay contenido";
+      }
+
+
+      public function carga(Request $request){
+
+        $idlesson =  $request->assignacionid;
+
+          $S3Options = [
+        'scheme' => 'http',
+        'version' => 'latest',
+        'region'  => 'us-west-2',
+        'credentials' => 
+        [
+          'key' => 'AKIAJ64CUZMI2B36T3BA',
+          'secret' => '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'
+        ]
+      ]; 
+
+      $s3 = new S3Client($S3Options); 
+
+      foreach ($_FILES['file']['name'] as $key => $archivs) {
+       
+        $uploadObject = $s3->putObject(
+                  [
+                  'Bucket' => 'lmsconfitecabucket',
+                  'Key' => $idlesson."/".$archivs,
+                  'SourceFile' => $_FILES['file']['tmp_name'][$key]
+        ]);          
+
+
+      }
+            
+         print_r("Realizado"); 
+         
+        }
+
+
+        public function deleteFi($id){
+
+           $S3Options = [
+        'scheme' => 'http',
+        'version' => 'latest',
+        'region'  => 'us-west-2',
+        'credentials' => 
+        [
+          'key' => 'AKIAJ64CUZMI2B36T3BA',
+          'secret' => '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'
+        ]
+      ]; 
+
+       $s3 = new S3Client($S3Options);
+
+       $archivos = $s3->listObjects(
+        [
+          'Bucket' => 'lmsconfitecabucket',
+          "Prefix" => $id
+        ]); 
+
+        $archivos = $archivos->toArray();
+
+
+        if (array_has($archivos,'Contents')) {
+
+             foreach ($archivos['Contents'] as $archivo) 
+        {
+
+      $s3->deleteObject([
+          'Bucket' => 'lmsconfitecabucket',
+           'Key'    => $archivo['Key']
+      ]);   
+
+          }
+          return redirect()->back()->with('success', 'Eliminación realizada');  
+    }
+
+       
+       return back()->withInput()->withErrors('No hay archivos a eliminar');
+     }
+
+
+     public function iframee($id){
+          return view('admin.lessons.iframe',compact('id'));
+        }
+
+
+
 
     public function show($id){
         
         $lesson = Lesson::findOrFail($id);
-
-        return view('admin.lessons.show', compact('lesson'));
+         $ids = $lesson->id;
+        return view('admin.lessons.show', compact('lesson','ids'));
     }
     
     

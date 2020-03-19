@@ -13,9 +13,19 @@
 <!-- jquery -->
 <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
 
+
+
+<!-- PARA QUE SIRVE : SLIDER DEL PPT -->
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link href="{{ asset('bower_components/sliderppt/css/swiper.min.css') }}" type="text/css" rel="stylesheet"/>
+
 <!-- CHART JS-->
 <script src="{{ asset('bower_components/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('bower_components/chartjs/utils.js') }}"></script>
+
+<script src="{{ asset('bower_components/chartjs/utils.js') }}"></script>
+
+ <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 
   <!-- Pie Novus JS-->

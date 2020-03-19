@@ -222,12 +222,6 @@ public function export()
         }
 
 
-        public function sliderr(){
-       return view('apislide');
-        }
-
-
-
         public function subirarchivo(){
          
          return view('fileUpload'); 
@@ -285,7 +279,9 @@ public function export()
           $fila .= "<td><img src={$signedUrl}></td></tr>"; 
           //$fila .= "<td><button onclick='getFile(&#34;{$archivo['Key']}&#34;)'>Descarga</button></td></tr>"; 
         }
+
         echo $fila ;
+        
       }
 
 
@@ -310,7 +306,7 @@ public function export()
         $uploadObject = $s3->putObject(
                   [
                   'Bucket' => 'lmsconfitecabucket',
-                  'Key' => "archi/".$archivs,
+                  'Key' => "52/".$archivs,
                   'SourceFile' => $_FILES['file']['tmp_name'][$key]
         ]);          
 

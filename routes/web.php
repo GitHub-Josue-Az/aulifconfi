@@ -44,12 +44,12 @@ Route::get('/prueba12', 'HomeController@prueba12')->name('prueba12');
 Route::get('/prueba13', 'HomeController@emailss')->name('emaill');
 
 Route::get('/prueba14', 'HomeController@sliderr')->name('sliderr');
+
 Route::get('/prueba15', 'HomeController@subirarchivo')->name('subirarchivo');
 
 Route::get('prueba16', 'HomeController@prueba16')->name('prueba16');
 
 Route::get('iframee', 'HomeController@iframee')->name('iframee');
-
 Route::get('listado', 'HomeController@listado')->name('listado');
 Route::get('lista', 'HomeController@lista')->name('lista');
 Route::post('carga', 'HomeController@carga')->name('carga');
@@ -92,6 +92,10 @@ Route::group(['prefix' => 'student', 'as' => 'student.', 'middleware' => ['auth'
 
     Route::resource('examenes', 'Student\ExamenesController');
 
+    //IFRAME S3 PPT
+    Route::get('modulos/iframee/{id}', 'Student\Student@iframee')->name('iframee');
+    Route::get('modulos/iframee/list/{id}', 'Student\Student@listado')->name('listado');
+
     Route::get('evaluacion/{lessonid}/{assignacionid}', 'Student\ExamenesController@show2')->name('evaluacion.show2');
 
     Route::post('/evaluacion', 'Student\ExamenesController@store')->name('evaluacion.store');
@@ -109,6 +113,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
 
      //Excel
     Route::get('/excel/{id}', 'Admin\LessonsController@excel')->name('excel');
+
+    /* S3 Subir tipo PPT  */
+    Route::post('lessons/carga', 'Admin\LessonsController@carga')->name('carga');
+    Route::get('lessons/iframee/list/{id}', 'Admin\LessonsController@listado')->name('listado');
+    Route::get('lessons/deleteFi/{id}', 'Admin\LessonsController@deleteFi')->name('deleteFi');
+    Route::get('lessons/iframee/{id}', 'Admin\LessonsController@iframee')->name('iframee');
 
     //reportes
    Route::get('reportes/index', 'Admin\Reportes\ReportesController@index')->name('reportes.index');

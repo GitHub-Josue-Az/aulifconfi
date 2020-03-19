@@ -28,8 +28,6 @@
 
         </div>
          
-        </form>
-
         @elseif ( $quiz->isEmpty()  == false )
             
             Usted ya realizo un examen!
